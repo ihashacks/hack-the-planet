@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# install base packages
+yum update -y
+yum -y install subversion python-devel openssl-devel zlib-devel libpcap-devel glibc-devel gcc kernel-devel gcc-c++ wget unzip
+
+# install and enable EPEL
+yum install -y epel-release
+
+# download and install latest NVIDIA CUDA
+wget http://developer.download.nvidia.com/compute/cuda/repos/rhel6/x86_64/cuda-repo-rhel6-6.5-14.x86_64.rpm
+rpm -Uvh cuda-repo-rhel6-6.5-14.x86_64.rpm
+yum clean expire-cache
+yum install -y cuda
+
+# these should probably exist in a bashrc somewhere
+export PATH=/usr/local/cuda-6.5/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda-6.5/lib64:$LD_LIBRARY_PATH
+
+# download and install scapy
+wget http://www.secdev.org/projects/scapy/files/scapy-latest.zip
+unzip scapy-latest.zip -d scapy
+cd scapy/*/
+python setup.py install
+
+# download and install pyrit with CUDA support
+svn checkout http://pyrit.googlecode.com/svn/trunk/ pyrit
+cd pyrit/pyrit
+python setup.py install
+cd ../cpyrit_cuda
+sed -i -e "s/NVIDIA_INC_DIRS = \[\]/NVIDIA_INC_DIRS = \[\'\/usr\/local\/cuda-6.5\/include\'\]/" setup.py
+python setup.py install
