@@ -9,10 +9,9 @@ yum install -y epel-release
 yum-config-manager --enable epel
 
 # download and install latest NVIDIA CUDA
-wget http://developer.download.nvidia.com/compute/cuda/repos/rhel6/x86_64/cuda-repo-rhel6-6.5-14.x86_64.rpm
-rpm -Uvh cuda-repo-rhel6-6.5-14.x86_64.rpm
-yum clean expire-cache
-yum install -y cuda
+wget "http://developer.download.nvidia.com/compute/cuda/6_5/rel/installers/cuda_6.5.14_linux_64.run"
+chmod +x cuda_6.5.14_linux_64.run
+./cuda_6.5.14_linux_64.run
 
 # these should probably exist in a bashrc somewhere
 export PATH=/usr/local/cuda-6.5/bin:$PATH
@@ -23,6 +22,7 @@ wget http://www.secdev.org/projects/scapy/files/scapy-latest.zip
 unzip scapy-latest.zip -d scapy
 cd scapy/*/
 python setup.py install
+cd
 
 # download and install pyrit with CUDA support
 svn checkout http://pyrit.googlecode.com/svn/trunk/ pyrit
